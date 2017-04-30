@@ -14,14 +14,16 @@ handtimestampAll = [];
 handDataAll = [];
 
 [y, Fs] = beep_gen;
-for i=1:16  % Just present 6 trials for demo
-    % reset fastrak data
-    fastrak('reset');
-    
-%     index=randi(length(trials)); 
-    index = i;
-    [x,y,z,num] = size(images);
+for i=1:6  % Just present 6 trials for demo
+    index=randi(length(trials)); 
+%     index = i;
+    [sx,sy,sz,num] = size(images);
     imgArray = images(:,:,:,randi(num));
+    
+    % reset trakers data
+    tetio_readGazeData;
+     fastrak('reset');
+    
     [fixtime, centraltime, cuetime, gaptime, targettime, endtime, timeDiff]=oneTrial2(wptr, trials(index, 1), 2.0, y, Fs, imgArray); % callback function for each trial
     
     % get tetio(eye tracker data) 
@@ -46,6 +48,7 @@ for i=1:16  % Just present 6 trials for demo
     % get fastrak (finger data)
     %------ add  on 20170419 -------%
     [fastrak_start, fastrak_stop, handmotion_origin] = fastrak('getData');
+    fastrak('reset');
     numHandPara=size(handmotion_origin, 1);
     numHandData=size(handmotion_origin, 2);
     handmatrice=ones(numHandPara,1)*i;
