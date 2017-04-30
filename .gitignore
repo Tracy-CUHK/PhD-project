@@ -1,0 +1,6 @@
+*.csv
+*.subjectInfo.txt
+*.trialInfo.txt
+*x64\
+*Debug\
+*.sdf
