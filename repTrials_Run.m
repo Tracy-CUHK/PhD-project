@@ -1,4 +1,4 @@
-function [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll, fastrak_start, fastrak_stop, handmotion, handtimestampAll]=repTrials_Run(wptr, trials, y, Fs)
+function [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll, fastrak_start, fastrak_stop, handtimestampAll, handDataAll]=repTrials_Run(wptr, trials, images)
 %repTrial_Run.m
 
 fastrak('start');
@@ -10,11 +10,21 @@ rightEyeAll = [];
 timeStampAll = [];
 trialInfoAll = [];
 eventMarkerAll = [];
+handtimestampAll = [];
+handDataAll = [];
 
-
-for i=1:6  % Just present 6 trials for demo
-    index=randi(length(trials)); 
-    [fixtime, centraltime, cuetime, gaptime, targettime, endtime, timeDiff]=oneTrial2(wptr, trials(index, 1), 2.0, y, Fs); % callback function for each trial
+[y, Fs] = beep_gen;
+for i=1:16  % Just present 6 trials for demo
+    % reset fastrak data
+    fastrak('reset');
+    
+%     index=randi(length(trials)); 
+    index = i;
+    [x,y,z,num] = size(images);
+    imgArray = images(:,:,:,randi(num));
+    [fixtime, centraltime, cuetime, gaptime, targettime, endtime, timeDiff]=oneTrial2(wptr, trials(index, 1), 2.0, y, Fs, imgArray); % callback function for each trial
+    
+    % get tetio(eye tracker data) 
     [lefteye, righteye, timestamp, trigSignal] = tetio_readGazeData;
     num=size(lefteye,1);
     numGazeData=size(lefteye,2);
@@ -33,20 +43,21 @@ for i=1:6  % Just present 6 trials for demo
     timeStampAll = vertcat(timeStampAll, timestamp_temp2(:,1:2));
     eventMarkerAll = vertcat(eventMarkerAll, trigSignal_temp(:,1:2));
     
+    % get fastrak (finger data)
     %------ add  on 20170419 -------%
-    %[fastrak_start, fastrak_stop, handmotion_origin] = fastrak('getData');
-    %numHandPara=size(handmotion_origin, 1);
-    %numHandData=size(handmotion_origin, 2);
-    %handmatrice=ones(numHandPara,1)*i;
-    %handtimestamp_temp1 = int64(handmotion_origin(:,7));
-    %handtimestamp_temp2 = horzcat(handmatrice, handtimestamp_temp1);
-    %handtimestampAll = vertcat(handtimestampAll, handtimestamp_temp2(:, 1:2));
+    [fastrak_start, fastrak_stop, handmotion_origin] = fastrak('getData');
+    numHandPara=size(handmotion_origin, 1);
+    numHandData=size(handmotion_origin, 2);
+    handmatrice=ones(numHandPara,1)*i;
+    handtimestamp_temp1 = int64(handmotion_origin(:,7));
+    handtimestamp_temp2 = horzcat(handmatrice, handtimestamp_temp1);
+    handtimestampAll = vertcat(handtimestampAll, handtimestamp_temp2(:, 1:2));
     
-    %handmotion_temp1=horzcat(handmatrice, handmotion_origin(:, 1:(numHandData-1)));
-    %handDataAll = vertcat(handDataAll, handmotion_temp1(:, 1:numHandData));
+    handmotion_temp1=horzcat(handmatrice, handmotion_origin(:, 1:(numHandData-1)));
+    handDataAll = vertcat(handDataAll, handmotion_temp1(:, 1:numHandData));
     %------ add  on 20170419 -------%
 end
-[fastrak_start, fastrak_stop, handmotion] = fastrak('getData');
+% [fastrak_start, fastrak_stop, handmotion] = fastrak('getData');
 fastrak('stop');
 tetio_stopTracking;  % Stop eyetracking.. 
 %[lefteye, righteye, timestamp, trigSignal] = tetio_readGazeData;
@@ -56,7 +67,7 @@ tetio_stopTracking;  % Stop eyetracking..
 %timeStampAll = vertcat(timeStampAll, timestamp(:,1));
 %eventMarkerAll = vertcat(eventMarkerAll, trigSignal(:,1));
 %timeStampAll = int64(timeStampAll) - timeDiff;
-handtimestampAll= int64(handmotion(:,7));
+% handtimestampAll= int64(handmotion(:,7));
 
 tetio_disconnectTracker;
 tetio_cleanUp;

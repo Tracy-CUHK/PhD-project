@@ -1,4 +1,4 @@
-function [conditions]=initializeConditions(wptr, radius, distance, long, replication)
+function [conditions images]=initializeConditions(wptr, radius, distance, long, replication)
 % initializeConditions.m
 global fixationSize;
 
@@ -60,13 +60,21 @@ trect3=AlignRect([0, 0, 2*radius, 2*radius], [0, 0, 6*radius+2*distance, wrect(4
     %conditions(i,1).stimtrect=CenterRect([0, 0, 6*radius+2*distance, wrect(4)-2*radius], wrect);
     conditions(i,1).stimtrect=trect;
     
-    %images = [1:6];
-    %for i = 1:6
-     %   xxx[i] = imageread('0'+i+'.jpg')
-    %end
-    
-    %conditions(i,1).images = xxx;
-    
+    % load images
+    %global images;
+    imname = dir('images\*.jpg');
+    im_num = length(imname);
+    if (im_num <= 0)
+        disp('ERROR: Not any images in images/');
+        exit();
+    end
+    im_temp = imread(['images/' imname(1).name], 'jpg');
+    [x,y,z] = size(im_temp);
+    images(:,:,:,:) = zeros(x,y,z,im_num,'uint8');
+    for i = 1 : im_num
+        imgArrayItr = imread(['images/0' num2str(i) '.jpg']);
+        images(:,:,:,i) = imgArrayItr; 
+    end    
 end
 conditions=Shuffle(repmat(conditions,replication,1)); % repat the matrice and then randomize the order of row
 return

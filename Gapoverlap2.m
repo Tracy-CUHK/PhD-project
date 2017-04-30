@@ -67,11 +67,6 @@ disp('Calibration workflow stopped');
 close all;
 
 KbName('UnifyKeyNames');
-
-%MYU added ----------------
-[y, Fs]=beep_gen;
-disp('generate beep sound variables');
-%MYU add end.----------------
     
 fastrak('initAll')
 subinfo=getSubInfo;
@@ -81,8 +76,8 @@ end
 try
     
     [wptr, wrect]=Screen('OpenWindow', 1, 255, [ ]);
-    trials=initializeConditions(wptr, 18.75, 525, 20, 4);
-    [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll,  fastrak_start, fastrak_stop, handtimestampAll, handDataAll]=repTrials_Run(wptr, trials, y, Fs);
+    [trials, images]=initializeConditions(wptr, 18.75, 525, 20, 4);
+    [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll,  fastrak_start, fastrak_stop, handtimestampAll, handDataAll]=repTrials_Run(wptr, trials, images);
     
     csvwrite(['Sub' char(subinfo(1)) '.gazedataleft.csv'], leftEyeAll); % % Save gaze data vectors to file
     csvwrite(['Sub' char(subinfo(1)) '.gazedataright.csv'], rightEyeAll);  % % Save gaze data vectors to file
