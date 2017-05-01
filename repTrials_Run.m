@@ -1,4 +1,4 @@
-function [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll, fastrak_start, fastrak_stop, handtimestampAll, handDataAll]=repTrials_Run(wptr, trials, images)
+function [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll, fastrak_start, fastrak_stop, handtimestampAll, handDataAll]=repTrials_Run(wptr, trials, images, trialperblock)
 %repTrial_Run.m
 
 fastrak('start');
@@ -20,9 +20,9 @@ for i=1:6  % Just present 6 trials for demo
     [sx,sy,sz,num] = size(images);
     imgArray = images(:,:,:,randi(num));
     
-    % reset trakers data
+    % reset trackers data
     tetio_readGazeData;
-     fastrak('reset');
+    fastrak('reset');
     
     [fixtime, centraltime, cuetime, gaptime, targettime, endtime, timeDiff]=oneTrial2(wptr, trials(index, 1), 2.0, y, Fs, imgArray); % callback function for each trial
     
@@ -60,6 +60,31 @@ for i=1:6  % Just present 6 trials for demo
     handDataAll = vertcat(handDataAll, handmotion_temp1(:, 1:numHandData));
     %------ add  on 20170419 -------%
 end
+
+justSaySomething2(wptr, 'Please press any key to start the experiment.', 1, [255 0 0]);
+WaitSecs(0.5);
+
+for i = 1:length(trials)
+    WaitSecs(0.5);
+    
+    [sx,sy,sz,num] = size(images);
+    imgArray = images(:,:,:,randi(num));
+    
+    % reset trackers data
+    tetio_readGazeData;
+    fastrak('reset');
+    
+    oneTrial2(wptr, trials(i,1), 2.0, y, Fs, imgArray); % callback function for each trial
+    if mod(i, trialperblock) == 0 && i < length(trials)
+        tips=['Block_' num2str(floor(i/trialperblock)) '/' ...
+            num2str(ceil(length(trials)/trialperblock)) ...
+            ' finished. \n\n Please take a break. \n\n Any key to continue!'];
+        justSaySomething2(wptr, tips, 1, [255 0 0]);
+    end
+    
+end
+    
+    
 % [fastrak_start, fastrak_stop, handmotion] = fastrak('getData');
 fastrak('stop');
 tetio_stopTracking;  % Stop eyetracking.. 

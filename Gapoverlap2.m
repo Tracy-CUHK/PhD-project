@@ -76,8 +76,8 @@ end
 try
     
     [wptr, wrect]=Screen('OpenWindow', 1, 255, [ ]);
-    [trials, images]=initializeConditions(wptr, 18.75, 525, 20, 4);
-    [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll,  fastrak_start, fastrak_stop, handtimestampAll, handDataAll]=repTrials_Run(wptr, trials, images);
+    [trials, images]=initializeConditions(wptr, 18.75, 525, 20, 10);
+    [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll,  fastrak_start, fastrak_stop, handtimestampAll, handDataAll]=repTrials_Run(wptr, trials, images, 10);
     
     csvwrite(['Sub' char(subinfo(1)) '.gazedataleft.csv'], leftEyeAll); % % Save gaze data vectors to file
     csvwrite(['Sub' char(subinfo(1)) '.gazedataright.csv'], rightEyeAll);  % % Save gaze data vectors to file
