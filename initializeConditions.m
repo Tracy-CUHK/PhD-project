@@ -1,4 +1,4 @@
-function [conditions images]=initializeConditions(wptr, radius, distance, long, replication)
+function [conditions, images]=initializeConditions(wptr, radius, distance, replication)
 % initializeConditions.m
 global fixationSize;
 
@@ -24,38 +24,38 @@ for i=1:size(treatments, 1) % enter FOR loop to define each of four experiment c
     conditions(i,1).Attribute=treatments(i,1); % the first column means "Gap" or "Overlap" attribute of the experiment
     conditions(i,1).Direction=treatments(i,2); % the second column means "left" or "right" side appearance of target
 offptr2=Screen('OpenOffScreenWindow', wptr, 255, [0, 0, 6*radius+2*distance, 2*radius]); % Create an offscreen window (offptr2) for "Gap" or "Overlap" interval
-offptr3=Screen('OpenOffScreenWindow', wptr, 255, [0, 0, 6*radius+2*distance, wrect(4)-2*radius]); % Create an offscreen window (offptr3) for drawing the target
-trect2=AlignRect([0, 0, long, long], [0, 0, 6*radius+2*distance, wrect(4)-2*radius], 3, 4);
-trect3=AlignRect([0, 0, 2*radius, 2*radius], [0, 0, 6*radius+2*distance, wrect(4)-2*radius], 5, 5);
+%offptr3=Screen('OpenOffScreenWindow', wptr, 255, [0, 0, 6*radius+2*distance, wrect(4)-2*radius]); % Create an offscreen window (offptr3) for drawing the target
+%trect2=AlignRect([0, 0, long, long], [0, 0, 6*radius+2*distance, wrect(4)-2*radius], 3, 4);
+%trect3=AlignRect([0, 0, 2*radius, 2*radius], [0, 0, 6*radius+2*distance, wrect(4)-2*radius], 5, 5);
     if treatments(i,1)==1 
          if treatments(i,2)==1 % For "Gap" & "Left" condition
-             trect=[379, 521.5,  416, 558.5];
+             trect=[369.5, 502.5, 425.5, 577.5];
              %trect=AlignRect([0, 0, 2*radius, 2*radius], [0, 0, 6*radius+2*distance, wrect(4)-2*radius], 5, 1); % Set the rect area to be on the left side
          else
-            trect=[1504, 521.5, 1541, 558.5];
+            trect=[1494.5, 502.5, 1550.5, 577.5];
             %trect=AlignRect([0, 0, 2*radius, 2*radius], [0, 0, 6*radius+2*distance, wrect(4)-2*radius], 5, 3); % For "Gap" & "Right" condition, set the rect area to be on the right side
          end
     else       % For "Overlap" condition
          DrawCentralStim(offptr2, radius, distance); % The central circle stimulus was kept on during the "Overlap" interval
-         DrawCentralStim2(offptr3, trect3); % The central circle stimulus was kept on the screen together with the appearance of target
+         % DrawCentralStim2(offptr3, trect3); % The central circle stimulus was kept on the screen together with the appearance of target
          if treatments(i,2)==1
-             trect=[379, 521.5,  416, 558.5];
+             trect=[369.5, 502.5, 425.5, 577.5];
              %trect=AlignRect([0, 0, 2*radius, 2*radius], [0, 0, 6*radius+2*distance, wrect(4)-2*radius], 5, 1); % Set the rect area to be on the left side
          else
-             trect=[1504, 521.5, 1541, 558.5];
+             trect=[1494.5, 502.5, 1550.5, 577.5];
              %trect=AlignRect([0, 0, 2*radius, 2*radius], [0, 0, 6*radius+2*distance, wrect(4)-2*radius], 5, 3); % Set the rect area to be on the right side
          end
     end
     %DrawTarget(offptr3, trect);
     %Screen('FillOval', offptr3, [0, 0, 0], trect); % Draw the target on the offscreen window (offptr3)
-    Screen('FillRect', offptr3, [0, 0, 0], trect2);
+    %Screen('FillRect', offptr3, [0, 0, 0], trect2);
     conditions(i,1).radius=radius;
     conditions(i,1).fixptr=fixptr;
     conditions(i,1).centralStimPtr=offptr;
     conditions(i,1).cuePtr=offptr1;
     conditions(i,1).sound=cue.sound;
     conditions(i,1).gapPtr=offptr2;
-    conditions(i,1).stimPtr=offptr3;
+    %conditions(i,1).stimPtr=offptr3;
     conditions(i,1).nstrect=CenterRect([0,0,fixationSize, fixationSize], wrect); % Define the rect area for drawing Fixation cross
     conditions(i,1).dstrect=CenterRect([0, 0, 6*radius+2*distance, 2*radius], wrect); 
     %conditions(i,1).stimtrect=CenterRect([0, 0, 6*radius+2*distance, wrect(4)-2*radius], wrect);

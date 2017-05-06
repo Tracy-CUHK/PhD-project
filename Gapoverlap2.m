@@ -76,27 +76,43 @@ end
 try
     
     [wptr, wrect]=Screen('OpenWindow', 1, 255, [ ]);
-    [trials, images]=initializeConditions(wptr, 18.75, 525, 20, 10);
+    [trials, images]=initializeConditions(wptr, 18.75, 525, 5);
     [leftEyeAll, rightEyeAll, timeStampAll, trialInfoAll, eventMarkerAll,  fastrak_start, fastrak_stop, handtimestampAll, handDataAll]=repTrials_Run(wptr, trials, images, 10);
     
-    csvwrite(['Sub' char(subinfo(1)) '.gazedataleft.csv'], leftEyeAll); % % Save gaze data vectors to file
-    csvwrite(['Sub' char(subinfo(1)) '.gazedataright.csv'], rightEyeAll);  % % Save gaze data vectors to file
+    csvwrite(['Task2_Sub' char(subinfo(1)) '-' char(subinfo(6)) '.gazedataleft.csv'], leftEyeAll); % % Save gaze data vectors to file
+    csvwrite(['Task2_Sub' char(subinfo(1)) '-' char(subinfo(6)) '.gazedataright.csv'], rightEyeAll);  % % Save gaze data vectors to file
     %fileID1=fopen(['Sub' char(subinfo(1)) '.timestamp.txt'], 'w');
     %fprintf(fileID1, '%16u\r\n', timeStampAll); % Save remote time stamp to file
     %fclose(fileID1);
     % dlmwrite('timestamp.csv', timeStampAll, 'precision', '%17u'); 
-    fileID2=fopen(['Sub' char(subinfo(1)) '.trialInfo.txt'], 'w');
-    fprintf(fileID2, '%10s %10s %10s %10s %20s %20s %20s %20s %20s %20s\r\n', 'trialNo.', 'Index', 'attribute', 'direction', 'fixtime', 'centraltime', 'cuetime', 'gaptime', 'targettime', 'endtime');
-    fprintf(fileID2, '%10d %10d %10d %10d %20d %20d %20d %20d %20d %20d\r\n', trialInfoAll'); % Save stimulus event time stamp to file
-    fclose(fileID2);
+    fileID1=fopen(['Task2_Sub' char(subinfo(1)) '-' char(subinfo(6)) '.trialInfo.txt'], 'w');
+    fprintf(fileID1, '%10s %10s %10s %20s %20s %20s %20s %20s %20s\r\n', 'trialNo.', 'attribute', 'direction', 'fixtime', 'centraltime', 'cuetime', 'gaptime', 'targettime', 'endtime');
+    fprintf(fileID1, '%10d %10d %10d %20d %20d %20d %20d %20d %20d\r\n', trialInfoAll'); % Save stimulus event time stamp to file
+    fclose(fileID1);
     %fileID3=fopen(['Sub' char(subinfo(1)) '.localtimestamp.txt'], 'w');
     %fprintf(fileID3, '%16u\r\n', localtimeStampAll); % Save converted local time stamp to file
     %fclose(fileID3);
-    fileID4=fopen(['Sub' char(subinfo(1)) '.subjectInfo.txt'], 'w');
-    fprintf(fileID4, '%5s %5s %5s %10s %5s\r\n', 'subNo.', 'gender', 'GMFCS', 'birth', 'hand');
-    fprintf(fileID4, '%5s %5s %5s %10s %5s\r\n', char(subinfo(1)), char(subinfo(2)), char(subinfo(3)), char(subinfo(4)), char(subinfo(5)));
-    fclose(fileID4);
+    fileID2=fopen(['Task2_Sub' char(subinfo(1)) '-' char(subinfo(6)) '.subjectInfo.txt'], 'w');
+    fprintf(fileID2, '%5s %5s %5s %10s %5s %5s\r\n', 'subNo.', 'gender', 'GMFCS', 'birth', 'hand', 'block');
+    fprintf(fileID2, '%5s %5s %5s %10s %5s %5s\r\n', char(subinfo(1)), char(subinfo(2)), char(subinfo(3)), char(subinfo(4)), char(subinfo(5)), char(subinfo(6)));
+    fclose(fileID2);
     % dlmwrite('localtimestamp.csv', localtimeStampAll); 
+    fileID3=fopen(['Task2_Sub' char(subinfo(1)) '-' char(subinfo(6)) '.eyetimestamp.txt'], 'w');
+    fprintf(fileID3, '%5s %20s\r\n', 'trialNo.', 'eyetimestamp');
+    fprintf(fileID3, '%5d %20d\r\n', timeStampAll');
+    fclose(fileID3);
+    
+    fileID4=fopen(['Task2_Sub' char(subinfo(1)) '-' char(subinfo(6)) '.eventmarker.txt'], 'w');
+    fprintf(fileID4, '%5s %5s\r\n', 'trialNo.', 'marker');
+    fprintf(fileID4, '%5d %5d\r\n', eventMarkerAll');
+    fclose(fileID4);
+    
+    fileID5=fopen(['Task2_Sub' char(subinfo(1)) '-' char(subinfo(6)) '.handtimestamp.txt'], 'w');
+    fprintf(fileID5, '%5s %20s\r\n', 'trialNo.', 'handtimestamp');
+    fprintf(fileID5, '%5d %20d\r\n', handtimestampAll');
+    fclose(fileID5);
+    
+    csvwrite(['Task2_Sub' char(subinfo(1)) '-' char(subinfo(6)) '.handdata.csv'], handDataAll);
     disp('Program finished.');
     sca;
 catch
